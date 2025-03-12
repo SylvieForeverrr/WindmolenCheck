@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windmolen Monitor</title>
+    <script src="fake_api.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            transition: background-color 0.5s ease;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 60%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+        }
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        #windSlider {
+            width: 50%;
+        }
+        .stats-container {
+            margin-top: 20px;
+            padding: 10px;
+            background: white;
+            display: inline-block;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .arrow {
+            font-size: 18px;
+            margin-left: 5px;
+        }
+        .up {
+            color: green;
+        }
+        .down {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Windmolen Monitor</h1>
+    
+    <label for="windSlider">Windkracht: </label>
+    <input type="range" id="windSlider" min="0" max="10" step="0.1" value="5">
+    <span id="windValue">5</span>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Windmolen</th>
+                <th>Rotatiesnelheid (RPM)</th>
+                <th>Opgewekte Energie (W)</th>
+            </tr>
+        </thead>
+        <tbody id="data-body">
+        </tbody>
+    </table>
+
+    <div class="stats-container">
+        <h2>Gemiddelde Waarden</h2>
+        <p><strong>Gemiddelde RPM:</strong> <span id="avgRpm">0</span> RPM <span id="rpmArrow" class="arrow">↔</span></p>
+        <p><strong>Gemiddelde Energie:</strong> <span id="avgEnergy">0</span> W <span id="energyArrow" class="arrow">↔</span></p>
+    </div>
+
+    <script>
+        let prevAvgRpm = 0;
+        let prevAvgEnergy = 0;
+
+        function updateAverages(avgRpm, avgEnergy) {
+            document.getElementById("avgRpm").innerText = avgRpm;
+            document.getElementById("avgEnergy").innerText = avgEnergy;
+
+            let rpmArrow = document.getElementById("rpmArrow");
+            let energyArrow = document.getElementById("energyArrow");
+
+            // RPM pijltje bepalen
+            if (avgRpm > prevAvgRpm) {
+                rpmArrow.innerText = "↑";
+                rpmArrow.className = "arrow up";
+            } else if (avgRpm < prevAvgRpm) {
+                rpmArrow.innerText = "↓";
+                rpmArrow.className = "arrow down";
+            } else {
+                rpmArrow.innerText = "↔";
+                rpmArrow.className = "arrow";
+            }
+
+            // Energie pijltje bepalen
+            if (avgEnergy > prevAvgEnergy) {
+                energyArrow.innerText = "↑";
+                energyArrow.className = "arrow up";
+            } else if (avgEnergy < prevAvgEnergy) {
+                energyArrow.innerText = "↓";
+                energyArrow.className = "arrow down";
+            } else {
+                energyArrow.innerText = "↔";
+                energyArrow.className = "arrow";
+            }
+
+            // Huidige waarden opslaan
+            prevAvgRpm = avgRpm;
+            prevAvgEnergy = avgEnergy;
+        }
+    </script>
+</body>
+</html>
